@@ -30,9 +30,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const deviceInfo = {
                 url: window.location.href,
-                browser: navigator.userAgent,
+                title:document.title,
+                referrer: document.referrer || null,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookies_enabled: navigator.cookieEnabled,
+                screen_resolution: `${window.screen.width}x${window.screen.height}`,
+                window_size: `${window.innerWidth}x${window.innerHeight}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                 submission_time: new Date().toLocaleString()
             };
+
 
             fetch("http://localhost:8000/api/leads", {
                 method: "POST",

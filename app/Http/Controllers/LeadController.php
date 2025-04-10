@@ -29,16 +29,18 @@ class LeadController extends Controller
 
         $brand = Brand::where('script_token', $request->script_token)->first();
 
+        $userAgent = $request->userAgent();
 
-        $deviceInfo['ip'] = $request->ip();
-        $deviceInfo['user_agent'] = $request->userAgent();
-        $userAgent = $request->header('User-Agent');
-        $browser = $this->getBrowserName($userAgent);
+        $deviceInfo = array_merge($request->device_info ?? [], [
+            'ip' => $request->ip(),
+            'user_agent' => $userAgent,
+            'browser_name' => $this->getBrowserName($userAgent),
+        ]);
 
         $formData = $request->form_data;
 
         $fieldMapping = [
-            'first_name' => ['fname', 'name','firstname','first-name','first_name','fullname','full_name','yourname','your-name'],
+            'first_name' => ['fname','name','firstname','first-name','first_name','fullname','full_name','yourname','your-name'],
             'last_name' => ['lname','lastname','last-name','last_name'],
             'email' => ['email'],
             'phone' => ['tel','tele','phone','telephone','your-phone','phone-number','phonenumber'],
@@ -75,7 +77,6 @@ class LeadController extends Controller
 
         return response()->json(['lead'=> '$lead','message' => 'Lead captured successfully.'], 201);
     }
-
 
     private function getBrowserName($userAgent)
     {
